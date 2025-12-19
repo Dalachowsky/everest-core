@@ -3,10 +3,12 @@
 #pragma once
 
 #include <array>
+#include <cstdint>
 #include <optional>
 #include <string>
 
 #include <cbv2g/iso_2/iso2_msgDefDatatypes.h>
+#include <vector>
 
 namespace iso15118::d2::msg {
 
@@ -17,7 +19,14 @@ namespace data_types {
 constexpr auto SESSION_ID_LENGTH = 8;
 using SESSION_ID = std::array<uint8_t, SESSION_ID_LENGTH>; // hexBinary, max length 8
 
-using PercentValue = uint8_t; // [0 - 100]
+using PercentValue = uint8_t;                 // [0 - 100]
+using SAID = int16_t;                         // [1-255]
+using MeterID = std::string;                  // MaxLength: 32
+using EVSEID = std::string;                   // Length: 7-37
+using MeterReading = uint64_t;                // Wh
+using SigMeterReading = std::vector<uint8_t>; // MaxLength: 64
+using MeterStatus = int16_t;
+using TMeter = int16_t; // Unix timestamp format
 
 enum class ResponseCode {
     OK,
@@ -114,6 +123,14 @@ enum class isolationLevel {
     No_IMD
 };
 
+struct MeterInfo {
+    MeterID meter_id;
+    std::optional<MeterReading> meter_reading{std::nullopt};
+    std::optional<SigMeterReading> sig_meter_reading{std::nullopt};
+    std::optional<MeterStatus> meter_status{std::nullopt};
+    std::optional<TMeter> t_meter{std::nullopt};
+};
+
 struct PhysicalValue {
     int16_t value{0};
     int8_t multiplier{0}; // [-3 - 3]
@@ -159,6 +176,8 @@ struct Header {
 void convert(const struct iso2_MessageHeaderType& in, Header& out);
 void convert(const Header& in, struct iso2_MessageHeaderType& out);
 
+void convert(const iso2_MeterInfoType& in, data_types::MeterInfo& out);
+void convert(const data_types::MeterInfo& in, iso2_MeterInfoType& out);
 void convert(const iso2_DC_EVStatusType& in, data_types::DC_EVStatus& out);
 void convert(const data_types::AC_EVSEStatus& in, iso2_AC_EVSEStatusType& out);
 void convert(const data_types::DC_EVSEStatus& in, iso2_DC_EVSEStatusType& out);
