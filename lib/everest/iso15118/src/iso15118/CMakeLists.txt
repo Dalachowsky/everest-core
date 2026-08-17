@@ -79,6 +79,7 @@ target_sources(iso15118
     message/din/msg_data_types.cpp
     message/din/charge_parameter_discovery.cpp
     message/din/contract_authentication.cpp
+    message/din/power_delivery.cpp
     message/din/service_discovery.cpp
     message/din/service_payment_selection.cpp
 

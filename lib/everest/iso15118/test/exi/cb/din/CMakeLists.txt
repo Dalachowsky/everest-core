@@ -11,6 +11,7 @@ function(create_exi_test_target NAME)
 endfunction()
 
 create_exi_test_target(charge_parameter_discovery)
+create_exi_test_target(power_delivery)
 create_exi_test_target(service_discovery)
 create_exi_test_target(service_payment_selection)
 create_exi_test_target(contract_authentication)
